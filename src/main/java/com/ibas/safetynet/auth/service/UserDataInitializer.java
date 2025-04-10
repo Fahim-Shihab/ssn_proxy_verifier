@@ -41,7 +41,7 @@ public class UserDataInitializer implements CommandLineRunner {
             }
         }
 
-        ClientInfo clientInfo = clientRepository.findByUsername(userInfo.getUsername()).orElse(new ClientInfo());
+        ClientInfo clientInfo = clientRepository.findByUsername(readProps.getHspBasicUser()).orElse(new ClientInfo());
         if (clientInfo.getId() == null) {
             clientInfo.setUsername(readProps.getHspBasicUser());
             clientInfo.setPassword(passwordEncoder.encode(readProps.getHspBasicPwd()));

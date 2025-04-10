@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserDto {
     private Integer id;
-    private String userName;
+    private String username;
     private String password;
     private boolean enabled;
     private boolean accountNonExpired;

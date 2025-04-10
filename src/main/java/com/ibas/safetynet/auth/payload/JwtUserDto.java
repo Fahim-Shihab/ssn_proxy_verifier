@@ -27,7 +27,7 @@ public class JwtUserDto implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userDto.getUserName();
+        return userDto.getUsername();
     }
 
     @Override
