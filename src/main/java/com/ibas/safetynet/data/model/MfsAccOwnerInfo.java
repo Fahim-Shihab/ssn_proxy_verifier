@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "mfs_acc_owner_info")
+@Table(name = "mfs_acc_owner_details")
 public class MfsAccOwnerInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

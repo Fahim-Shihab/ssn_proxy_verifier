@@ -1,10 +1,9 @@
 package com.ibas.safetynet.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j
 @Service
 public class JwtService {
 
@@ -88,7 +88,24 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(getSignInKey()).parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            log.error("ExpiredJwtException error\n{}", e.getMessage());
+            return e.getClaims();
+        } catch (UnsupportedJwtException e) {
+            log.error("UnsupportedJwtException error\n{}", e.getMessage());
+            return null;
+        } catch (MalformedJwtException e) {
+            log.error("MalformedJwtException error\n{}", e.getMessage());
+            return null;
+        } catch (SignatureException e) {
+            log.error("SignatureException error\n{}", e.getMessage());
+            return null;
+        } catch (IllegalArgumentException e) {
+            log.error("IllegalArgumentException error\n{}", e.getMessage());
+            return null;
+        }
     }
 
     private Key getSignInKey() {

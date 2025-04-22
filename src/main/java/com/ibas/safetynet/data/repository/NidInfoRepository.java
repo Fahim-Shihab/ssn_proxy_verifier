@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface NidInfoRepository extends JpaRepository<NidInfo, Integer> {
-    @Query(value = "select * from nid_info where (smart_id=:pNid or nid=:pNid) and dob=:pDob", nativeQuery = true)
+    @Query(value = "select * from nid_details where (smart_id=:pNid or nid=:pNid) and dob=:pDob", nativeQuery = true)
     Optional<NidInfo> findByNidAndDob(@Param("pNid") String nid, @Param("pDob") LocalDate pDob);
 }
