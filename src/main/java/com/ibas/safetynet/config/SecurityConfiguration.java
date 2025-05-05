@@ -21,6 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -87,9 +88,19 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(List.of("*"));
-        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        List<String> allowedOrigins = new ArrayList<>();
+        allowedOrigins.add("*");
+        corsConfig.setAllowedOrigins(allowedOrigins);
+        List<String> allowedMethods = new ArrayList<>();
+        allowedMethods.add("GET");
+        allowedMethods.add("POST");
+        allowedMethods.add("PUT");
+        allowedMethods.add("DELETE");
+        corsConfig.setAllowedMethods(allowedMethods);
+        List<String> allowedHeaders = new ArrayList<>();
+        allowedHeaders.add("Authorization");
+        allowedHeaders.add("Content-Type");
+        corsConfig.setAllowedHeaders(allowedHeaders);
         corsConfig.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

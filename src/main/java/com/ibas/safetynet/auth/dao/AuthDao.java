@@ -1,5 +1,6 @@
 package com.ibas.safetynet.auth.dao;
 
+import com.ibas.safetynet.auth.model.UserInfo;
 import com.ibas.safetynet.auth.payload.AuthenticationResponse;
 import com.ibas.safetynet.auth.repository.UserRepository;
 import com.ibas.safetynet.config.JwtService;
@@ -28,12 +29,12 @@ public class AuthDao {
 
     public ResponseEntity<?> authenticate(String clientId, String username, String password) {
         try {
-            var userInfo = userRepository.findByUsername(username).orElse(null);
+            UserInfo userInfo = userRepository.findByUsername(username).orElse(null);
             if (userInfo != null) {
                 if (passwordEncoder.matches(password, userInfo.getPassword())) {
-                    var access_token = jwtService.generateToken(userInfo);
-                    var refresh_token = jwtService.generateRefreshToken(userInfo);
-                    var expires_in = jwtExpiration / 1000;
+                    String access_token = jwtService.generateToken(userInfo);
+                    String refresh_token = jwtService.generateRefreshToken(userInfo);
+                    long expires_in = jwtExpiration / 1000;
                     Instant issued = Instant.now();
                     Instant expires = issued.plusSeconds(expires_in);
 

@@ -15,7 +15,7 @@
 	<name>safetynet</name>
 	<description>Verifier project for Safetynet</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>8</java.version>
 	</properties>
 	<dependencies>
 		<dependency>

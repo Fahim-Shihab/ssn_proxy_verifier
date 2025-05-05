@@ -38,7 +38,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<String> details = new ArrayList<>();
         for (ParameterValidationResult error : ex.getParameterValidationResults()) {
-            details.add(error.getMethodParameter().getParameterName() + " " + error.getResolvableErrors().getFirst().getDefaultMessage());
+            details.add(error.getMethodParameter().getParameterName() + " " + error.getResolvableErrors().get(0).getDefaultMessage());
         }
         ErrorResponse error = new ErrorResponse("Validation Failed", details);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
