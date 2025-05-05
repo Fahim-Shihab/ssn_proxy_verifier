@@ -18,13 +18,13 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class NidService {
     private final NidInfoRepository nidInfoRepository;
-    private GsonBuilder builder = new GsonBuilder();
-    private Gson gson = builder.create();
+    private final GsonBuilder builder = new GsonBuilder();
+    private final Gson gson = builder.create();
 
     @Transactional(readOnly = true)
     public NidInfoResponse getNidInfo(String nid, LocalDate dob) {
 
-        NidInfoResponse nidInfoResponse = null;
+        NidInfoResponse nidInfoResponse;
 
         try {
             NidInfo nidInfo = nidInfoRepository.findByNidAndDob(nid, dob).orElse(null);

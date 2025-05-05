@@ -1,9 +1,9 @@
 package com.ibas.safetynet.data.controller;
 
-import com.ibas.safetynet.data.payload.BrnInfoDto;
 import com.ibas.safetynet.data.service.BrnService;
 import com.ibas.safetynet.data.service.MfsAccOwnerInfoService;
 import com.ibas.safetynet.data.service.NidService;
+import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,40 +22,26 @@ public class DataController {
     @GetMapping(path = "/BRNInfo")
     @ResponseBody
     public ResponseEntity<?> getBrnData(
-            @RequestParam String ubrn,
-            @RequestParam LocalDate dob) {
-        if (ubrn != null && !ubrn.trim().isEmpty() && dob != null) {
-            return ResponseEntity.ofNullable(brnService.getBrnInfoDto(ubrn, dob));
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+            @RequestParam @NotBlank @Size(min = 17, max = 17) String ubrn,
+            @RequestParam @Past LocalDate dob) {
+        return ResponseEntity.ofNullable(brnService.getBrnInfoDto(ubrn, dob));
     }
 
     @GetMapping(path = "/NIDinfo")
     @ResponseBody
     public ResponseEntity<?> getNidData(
-            @RequestParam String nid,
-            @RequestParam LocalDate dob) {
-        if (nid != null && !nid.trim().isEmpty() && dob != null) {
-            return ResponseEntity.ofNullable(nidService.getNidInfo(nid, dob));
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+            @RequestParam @NotBlank @Size(min = 10, max = 17) String nid,
+            @RequestParam @Past LocalDate dob) {
+        return ResponseEntity.ofNullable(nidService.getNidInfo(nid, dob));
     }
 
     @GetMapping(path = "/MFSInfo")
     @ResponseBody
     public ResponseEntity<?> getMfsData(
-            @RequestParam String mfs,
-            @RequestParam String mobile,
-            @RequestParam String nid
+            @RequestParam @NotBlank @Size(min = 4, max = 5, message = "MFS name must be 4-5 letters") String mfs,
+            @RequestParam @NotBlank @Size(min = 11, max = 11, message = "Mobile Number must be 11-digits") String mobile,
+            @RequestParam @NotBlank @Size(min = 10, max = 17, message = "Wrong MFS") String nid
     ) {
-        if (mfs != null && !mfs.trim().isEmpty()
-                && mobile != null && !mobile.trim().isEmpty()
-                && nid != null && !nid.trim().isEmpty()) {
-            return ResponseEntity.ofNullable(mfsAccOwnerInfoService.getMfsOwnerInfoResponse(mfs, mobile, nid));
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ofNullable(mfsAccOwnerInfoService.getMfsOwnerInfoResponse(mfs, mobile, nid));
     }
 }

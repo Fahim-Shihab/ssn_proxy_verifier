@@ -1,7 +1,6 @@
 package com.ibas.safetynet.config;
 
 import com.ibas.safetynet.auth.model.UserInfo;
-import com.ibas.safetynet.auth.payload.AuthorityDto;
 import com.ibas.safetynet.auth.payload.JwtUserDto;
 import com.ibas.safetynet.auth.payload.UserDto;
 import com.ibas.safetynet.auth.repository.UserRepository;
@@ -12,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,11 +26,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 UserInfo user = userInfoOptional.get();
                     UserDto userDto = new UserDto();
                     BeanUtils.copyProperties(user, userDto);
-                    JwtUserDto jwtUserDto = new JwtUserDto(
+                return new JwtUserDto(
                             userDto,
                             new ArrayList<>()
                     );
-                    return jwtUserDto;
             } else {
                 throw new UsernameNotFoundException("");
             }

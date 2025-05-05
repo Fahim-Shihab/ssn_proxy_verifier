@@ -70,7 +70,7 @@ public class JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS256, getSignInKey())
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -98,9 +98,6 @@ public class JwtService {
             return null;
         } catch (MalformedJwtException e) {
             log.error("MalformedJwtException error\n{}", e.getMessage());
-            return null;
-        } catch (SignatureException e) {
-            log.error("SignatureException error\n{}", e.getMessage());
             return null;
         } catch (IllegalArgumentException e) {
             log.error("IllegalArgumentException error\n{}", e.getMessage());

@@ -8,16 +8,12 @@ import java.util.List;
 @Getter
 public class JwtUserDto implements UserDetails {
 
-    UserDto userDto;
-    List<AuthorityDto> authorities;
+    final UserDto userDto;
+    final List<AuthorityDto> authorities;
 
     public JwtUserDto(UserDto userDto, List<AuthorityDto> authorities) {
         this.userDto = userDto;
         this.authorities = authorities;
-    }
-
-    public List<AuthorityDto> getAuthorities() {
-        return authorities;
     }
 
     @Override

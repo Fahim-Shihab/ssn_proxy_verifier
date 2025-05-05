@@ -1,6 +1,7 @@
 package com.ibas.safetynet.auth.controller;
 
 import com.ibas.safetynet.auth.service.AuthService;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,10 @@ public class AuthController {
 
     @PostMapping(path = "/token", consumes = "application/x-www-form-urlencoded")
     public ResponseEntity<?> authenticate(
-            @RequestHeader String authorization, @RequestParam String username,
-            @RequestParam String password, @RequestParam String grant_type) {
+            @RequestHeader @NotBlank String authorization,
+            @RequestParam @NotBlank String username,
+            @RequestParam @NotBlank String password,
+            @RequestParam @NotBlank String grant_type) {
         return authService.authenticate(authorization, username, password, grant_type);
     }
 }

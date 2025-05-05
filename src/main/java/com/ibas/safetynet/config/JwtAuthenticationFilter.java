@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("text/plain");
-                response.getWriter().write("Invalid jwt");
+                response.getWriter().write("Expired/Invalid token");
                 return;
             }
         }

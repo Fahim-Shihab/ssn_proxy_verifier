@@ -19,7 +19,7 @@ public class UserDataInitializer implements CommandLineRunner {
     private final ReadProps readProps;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         syncHspUser();
     }
 
