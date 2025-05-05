@@ -93,7 +93,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>ibas2api</finalName>
+		<finalName>ibasmockapi</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
