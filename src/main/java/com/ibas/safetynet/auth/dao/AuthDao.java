@@ -1,5 +1,6 @@
 package com.ibas.safetynet.auth.dao;
 
+import com.ibas.safetynet.auth.payload.AuthenticationResponse;
 import com.ibas.safetynet.auth.repository.UserRepository;
 import com.ibas.safetynet.config.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,19 +34,20 @@ public class AuthDao {
                     var access_token = jwtService.generateToken(userInfo);
                     var refresh_token = jwtService.generateRefreshToken(userInfo);
                     var expires_in = jwtExpiration / 1000;
-                    var issued = new Date();
-                    var expires = String.valueOf(issued.toInstant().plusSeconds(expires_in));
+                    Instant issued = Instant.now();
+                    Instant expires = issued.plusSeconds(expires_in);
 
-                    Map<String, Object> response = new HashMap<>();
-                    response.put("access_token", access_token);
-                    response.put("refresh_token", refresh_token);
-                    response.put("token_type", "Bearer");
-                    response.put("client_id", clientId);
-                    response.put("userName", username);
-                    response.put("expires_in", expires_in);
-                    response.put("issued", issued);
-                    response.put("expires", expires);
-                    return new ResponseEntity<>(response, HttpStatus.OK);
+                    AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+                    authenticationResponse.setAccess_token(access_token);
+                    authenticationResponse.setRefresh_token(refresh_token);
+                    authenticationResponse.setToken_type("Bearer");
+                    authenticationResponse.setClient_id(clientId);
+                    authenticationResponse.setUserName(username);
+                    authenticationResponse.setExpires_in(expires_in);
+                    authenticationResponse.setIssued(issued);
+                    authenticationResponse.setExpires(expires);
+
+                    return new ResponseEntity<>(authenticationResponse, HttpStatus.OK);
                 } else {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
                 }
