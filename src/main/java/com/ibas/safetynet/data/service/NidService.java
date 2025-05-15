@@ -2,9 +2,11 @@ package com.ibas.safetynet.data.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ibas.safetynet.common.GenericResponse;
 import com.ibas.safetynet.data.model.NidInfo;
 import com.ibas.safetynet.data.payload.Nid.*;
 import com.ibas.safetynet.data.repository.NidInfoRepository;
+import com.ibas.safetynet.kafka.KafkaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ public class NidService {
     private final NidInfoRepository nidInfoRepository;
     private final GsonBuilder builder = new GsonBuilder();
     private final Gson gson = builder.create();
+    private final KafkaService kafkaService;
 
     @Transactional(readOnly = true)
     public NidInfoResponse getNidInfo(String nid, LocalDate dob) {
@@ -78,5 +81,16 @@ public class NidService {
                     HttpStatus.INTERNAL_SERVER_ERROR.value()+"", null,
                     new NidFailureInfo(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()));
         }
+    }
+
+    public GenericResponse saveNidInfo(NidInfoDto dto) {
+        try {
+            kafkaService.publishNidMessage(dto);
+            return new GenericResponse(HttpStatus.OK.value(), "Success");
+        } catch (Exception e) {
+            log.error("Error saving BRN info\n{}", e.getMessage());
+        }
+
+        return new GenericResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error");
     }
 }

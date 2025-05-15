@@ -1,11 +1,14 @@
 package com.ibas.safetynet.data.service;
 
+import com.ibas.safetynet.common.GenericResponse;
 import com.ibas.safetynet.data.model.BrnInfo;
 import com.ibas.safetynet.data.payload.BrnInfoDto;
 import com.ibas.safetynet.data.repository.BrnInfoRepository;
+import com.ibas.safetynet.kafka.KafkaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class BrnService {
     private final BrnInfoRepository brnInfoRepo;
+    private final KafkaService kafkaService;
 
     @Transactional(readOnly = true)
     public BrnInfoDto getBrnInfoDto(String ubrn, LocalDate dob) {
@@ -32,5 +36,16 @@ public class BrnService {
             log.error("Error retrieving BRN info\n{}", e.getMessage());
             return null;
         }
+    }
+
+    public GenericResponse saveBrnInfo(BrnInfoDto dto) {
+        try {
+            kafkaService.publishBrnMessage(dto);
+            return new GenericResponse(HttpStatus.OK.value(), "Success");
+        } catch (Exception e) {
+            log.error("Error saving BRN info\n{}", e.getMessage());
+        }
+
+        return new GenericResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error");
     }
 }

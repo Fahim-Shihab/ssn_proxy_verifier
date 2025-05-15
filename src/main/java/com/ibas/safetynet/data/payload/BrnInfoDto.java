@@ -1,5 +1,7 @@
 package com.ibas.safetynet.data.payload;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +13,9 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class BrnInfoDto implements Serializable {
+    @Size(min = 17, max = 17)
     private String ubrn;
+    @NotNull
     private LocalDate dob;
     private String personName;
     private String personNameEn;
