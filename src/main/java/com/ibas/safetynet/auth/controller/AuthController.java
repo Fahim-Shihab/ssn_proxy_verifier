@@ -21,4 +21,9 @@ public class AuthController {
             @RequestParam @NotBlank String grant_type) {
         return authService.authenticate(authorization, username, password, grant_type);
     }
+
+    @GetMapping(path = "/test")
+    public String test() {
+        return "Hello, World!";
+    }
 }
