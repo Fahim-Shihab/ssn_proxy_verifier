@@ -26,7 +26,7 @@ public class KafkaService {
 
     public void publishBrnMessage(BrnInfoDto dto) {
         try {
-            kafkaTemplate.send(brnTopic, dto);
+            kafkaTemplate.send(brnTopic, dto.getUbrn(), dto);
         } catch (Exception e) {
             log.error("Error in publishing BRN message\n{}", e.getMessage());
         }
@@ -34,7 +34,7 @@ public class KafkaService {
 
     public void publishNidMessage(NidInfoDto dto) {
         try {
-            kafkaTemplate.send(nidTopic, dto);
+            kafkaTemplate.send(nidTopic, dto.getNationalId(), dto);
         } catch (Exception e) {
             log.error("Error in publishing NID message\n{}", e.getMessage());
         }
@@ -42,6 +42,7 @@ public class KafkaService {
 
     public void publishMfsMessage(MfsAccOwnerInfoDto dto) {
         try {
+            String key = dto.getNid() + "-" + dto.getMobileNumber() + "-" + dto.getMfsId();
             kafkaTemplate.send(mfsTopic, dto);
         } catch (Exception e) {
             log.error("Error in publishing MFS message\n{}", e.getMessage());

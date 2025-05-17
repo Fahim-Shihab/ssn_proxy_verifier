@@ -21,5 +21,5 @@ public class MfsAccOwnerInfoDto implements Serializable {
     @Size(min = 11, max = 11)
     private String mobileNumber;
     @NotNull
-    private boolean mobileNumberOwnedByNid;
+    private Boolean mobileNumberOwnedByNid;
 }
