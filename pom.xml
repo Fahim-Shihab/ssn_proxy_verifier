@@ -11,7 +11,7 @@
 	<groupId>com.ibas</groupId>
 	<artifactId>safetynet</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>safetynet</name>
 	<description>Verifier project for Safetynet</description>
 	<properties>
@@ -108,7 +108,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>safetynet-verifier</finalName>
+		<finalName>app</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -120,6 +120,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<layout>WAR</layout>
 				</configuration>
 			</plugin>
 		</plugins>

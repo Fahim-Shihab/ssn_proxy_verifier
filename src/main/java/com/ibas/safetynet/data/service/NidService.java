@@ -83,7 +83,7 @@ public class NidService {
         }
     }
 
-    public GenericResponse saveNidInfo(NidInfoDto dto) {
+    public GenericResponse saveNidInfoAsync(NidInfoDto dto) {
         try {
             kafkaService.publishNidMessage(dto);
             return new GenericResponse(HttpStatus.OK.value(), "Success");

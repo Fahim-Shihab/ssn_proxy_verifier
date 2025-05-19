@@ -28,6 +28,6 @@ public class NidController {
     @PostMapping(path = "/NIDinfo/save")
     @ResponseBody
     public ResponseEntity<?> saveNidData(@Valid @RequestBody NidInfoDto request) {
-        return ResponseEntity.ofNullable(nidService.saveNidInfo(request));
+        return ResponseEntity.ofNullable(nidService.saveNidInfoAsync(request));
     }
 }
