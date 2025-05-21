@@ -1,8 +1,13 @@
 package com.ibas.safetynet.kafka;
 
-import com.ibas.safetynet.data.payload.BrnInfoDto;
-import com.ibas.safetynet.data.payload.MfsAccOwnerInfoDto;
-import com.ibas.safetynet.data.payload.Nid.NidInfoDto;
+import com.ibas.safetynet.data.dao.BrnInfoDao;
+import com.ibas.safetynet.data.dao.MfsAccOwnerInfoDao;
+import com.ibas.safetynet.data.dao.NidInfoDao;
+import com.ibas.safetynet.data.payload.brn.BrnInfoDto;
+import com.ibas.safetynet.data.payload.brn.BrnInfoSaveDto;
+import com.ibas.safetynet.data.payload.mfs.MfsAccOwnerInfoDto;
+import com.ibas.safetynet.data.payload.mfs.MfsAccOwnerInfoSaveDto;
+import com.ibas.safetynet.data.payload.nid.NidInfoSaveDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,6 +23,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final BrnInfoDao brnInfoDao;
+    private final NidInfoDao nidInfoDao;
+    private final MfsAccOwnerInfoDao mfsAccOwnerInfoDao;
 
     @Value("${kafka.brnTopic}")
     private String brnTopic;
@@ -28,7 +36,7 @@ public class KafkaService {
     @Value("${kafka.mfsTopic}")
     private String mfsTopic;
 
-    public void publishBrnMessage(BrnInfoDto dto) {
+    public void publishBrnMessage(BrnInfoSaveDto dto) {
         try {
             kafkaTemplate.send(brnTopic, dto.getUbrn(), dto);
         } catch (Exception e) {
@@ -36,7 +44,7 @@ public class KafkaService {
         }
     }
 
-    public void publishNidMessage(NidInfoDto dto) {
+    public void publishNidMessage(NidInfoSaveDto dto) {
         try {
             kafkaTemplate.send(nidTopic, dto.getNationalId(), dto);
         } catch (Exception e) {
@@ -44,7 +52,7 @@ public class KafkaService {
         }
     }
 
-    public void publishMfsMessage(MfsAccOwnerInfoDto dto) {
+    public void publishMfsMessage(MfsAccOwnerInfoSaveDto dto) {
         try {
             String key = dto.getNid() + "-" + dto.getMobileNumber() + "-" + dto.getMfsId();
             kafkaTemplate.send(mfsTopic, key, dto);
@@ -53,39 +61,45 @@ public class KafkaService {
         }
     }
 
-//    @KafkaListener(topics = "${kafka.brnTopic}",
-//            clientIdPrefix = "json",
-//            containerFactory = "kafkaListenerContainerFactory",
-//            properties = {
-//                    "max.poll.interval.ms:300000",
-//                    "max.poll.records:50"})
-//    public void listenAsSingleRegistryObject(ConsumerRecord<String, BrnInfoDto> cr,
-//                                             @Payload BrnInfoDto payload, Acknowledgment ack) {
-//        log.info("BRN Key: {}", cr.key());
-//        ack.acknowledge();
-//    }
-//
-//    @KafkaListener(topics = "${kafka.nidTopic}",
-//            clientIdPrefix = "json",
-//            containerFactory = "kafkaListenerContainerFactory",
-//            properties = {
-//                    "max.poll.interval.ms:300000",
-//                    "max.poll.records:50"})
-//    public void listenAsSingleRegistryObject(ConsumerRecord<String, NidInfoDto> cr,
-//                                             @Payload NidInfoDto payload, Acknowledgment ack) {
-//        log.info("NID Key: {}", cr.key());
-//        ack.acknowledge();
-//    }
-//
-//    @KafkaListener(topics = "${kafka.mfsTopic}",
-//            clientIdPrefix = "json",
-//            containerFactory = "kafkaListenerContainerFactory",
-//            properties = {
-//                    "max.poll.interval.ms:300000",
-//                    "max.poll.records:50"})
-//    public void listenAsSingleRegistryObject(ConsumerRecord<String, MfsAccOwnerInfoDto> cr,
-//                                             @Payload MfsAccOwnerInfoDto payload, Acknowledgment ack) {
-//        log.info("MFS Key: {}", cr.key());
-//        ack.acknowledge();
-//    }
+    @KafkaListener(topics = "${kafka.brnTopic}",
+            clientIdPrefix = "json",
+            containerFactory = "kafkaListenerContainerFactory",
+            properties = {
+                    "max.poll.interval.ms:300000",
+                    "max.poll.records:50"})
+    public void listenAsSingleRegistryObject(ConsumerRecord<String, BrnInfoSaveDto> cr,
+                                             @Payload BrnInfoSaveDto payload, Acknowledgment ack) {
+        log.info("Listened to BRN Key: {}", cr.key());
+        brnInfoDao.saveBrnInfo(payload);
+        ack.acknowledge();
+        log.info("Acknowledged BRN Key: {}", cr.key());
+    }
+
+    @KafkaListener(topics = "${kafka.nidTopic}",
+            clientIdPrefix = "json",
+            containerFactory = "kafkaListenerContainerFactory",
+            properties = {
+                    "max.poll.interval.ms:300000",
+                    "max.poll.records:50"})
+    public void listenAsSingleRegistryObject(ConsumerRecord<String, NidInfoSaveDto> cr,
+                                             @Payload NidInfoSaveDto payload, Acknowledgment ack) {
+        log.info("Listened to NID Key: {}", cr.key());
+        nidInfoDao.saveNidInfo(payload);
+        ack.acknowledge();
+        log.info("Acknowledged NID Key: {}", cr.key());
+    }
+
+    @KafkaListener(topics = "${kafka.mfsTopic}",
+            clientIdPrefix = "json",
+            containerFactory = "kafkaListenerContainerFactory",
+            properties = {
+                    "max.poll.interval.ms:300000",
+                    "max.poll.records:50"})
+    public void listenAsSingleRegistryObject(ConsumerRecord<String, MfsAccOwnerInfoSaveDto> cr,
+                                             @Payload MfsAccOwnerInfoSaveDto payload, Acknowledgment ack) {
+        log.info("Listened to MFS Key: {}", cr.key());
+        mfsAccOwnerInfoDao.saveMfsAccOwnerInfo(payload);
+        ack.acknowledge();
+        log.info("Acknowledged MFS Key: {}", cr.key());
+    }
 }

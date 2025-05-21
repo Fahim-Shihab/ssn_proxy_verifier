@@ -1,8 +1,10 @@
 package com.ibas.safetynet.data.service;
 
 import com.ibas.safetynet.common.GenericResponse;
+import com.ibas.safetynet.common.Utility;
 import com.ibas.safetynet.data.model.BrnInfo;
-import com.ibas.safetynet.data.payload.BrnInfoDto;
+import com.ibas.safetynet.data.payload.brn.BrnInfoDto;
+import com.ibas.safetynet.data.payload.brn.BrnInfoSaveDto;
 import com.ibas.safetynet.data.repository.BrnInfoRepository;
 import com.ibas.safetynet.kafka.KafkaService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -38,9 +41,13 @@ public class BrnService {
         }
     }
 
-    public GenericResponse saveBrnInfo(BrnInfoDto dto) {
+    public GenericResponse saveBrnInfoAsync(BrnInfoDto dto) {
         try {
-            kafkaService.publishBrnMessage(dto);
+            BrnInfoSaveDto saveDto = new BrnInfoSaveDto();
+            BeanUtils.copyProperties(dto, saveDto);
+            saveDto.setReceivedAt(LocalDateTime.now());
+            saveDto.setSentBy(Utility.getAuthenticatedUserId());
+            kafkaService.publishBrnMessage(saveDto);
             return new GenericResponse(HttpStatus.OK.value(), "Success");
         } catch (Exception e) {
             log.error("Error saving BRN info\n{}", e.getMessage());

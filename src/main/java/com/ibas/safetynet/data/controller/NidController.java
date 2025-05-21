@@ -1,6 +1,7 @@
 package com.ibas.safetynet.data.controller;
 
-import com.ibas.safetynet.data.payload.Nid.NidInfoDto;
+import com.ibas.safetynet.data.payload.nid.NidInfoDto;
+import com.ibas.safetynet.data.payload.nid.NidInfoSaveDto;
 import com.ibas.safetynet.data.service.NidService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -27,7 +28,7 @@ public class NidController {
 
     @PostMapping(path = "/NIDinfo/save")
     @ResponseBody
-    public ResponseEntity<?> saveNidData(@Valid @RequestBody NidInfoDto request) {
+    public ResponseEntity<?> saveNidData(@Valid @RequestBody NidInfoSaveDto request) {
         return ResponseEntity.ofNullable(nidService.saveNidInfoAsync(request));
     }
 }

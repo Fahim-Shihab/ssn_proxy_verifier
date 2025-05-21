@@ -1,6 +1,6 @@
 package com.ibas.safetynet.data.controller;
 
-import com.ibas.safetynet.data.payload.MfsAccOwnerInfoDto;
+import com.ibas.safetynet.data.payload.mfs.MfsAccOwnerInfoDto;
 import com.ibas.safetynet.data.service.MfsAccOwnerInfoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -28,6 +28,6 @@ public class MfsController {
     @PostMapping(path = "/MFSInfo/save")
     @ResponseBody
     public ResponseEntity<?> saveMfsData(@Valid @RequestBody MfsAccOwnerInfoDto request) {
-        return ResponseEntity.ofNullable(mfsAccOwnerInfoService.saveMfsInfo(request));
+        return ResponseEntity.ofNullable(mfsAccOwnerInfoService.saveMfsInfoAsync(request));
     }
 }

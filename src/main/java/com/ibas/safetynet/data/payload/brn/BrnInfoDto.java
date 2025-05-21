@@ -1,4 +1,4 @@
-package com.ibas.safetynet.data.payload;
+package com.ibas.safetynet.data.payload.brn;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

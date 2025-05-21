@@ -1,12 +1,11 @@
 package com.ibas.safetynet.data.controller;
 
-import com.ibas.safetynet.data.payload.BrnInfoDto;
+import com.ibas.safetynet.data.payload.brn.BrnInfoDto;
 import com.ibas.safetynet.data.service.BrnService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -29,6 +28,6 @@ public class BrnController {
     @PostMapping(path = "/BRNInfo/save")
     @ResponseBody
     public ResponseEntity<?> saveBrnData(@Valid @RequestBody BrnInfoDto request) {
-        return ResponseEntity.ofNullable(brnService.saveBrnInfo(request));
+        return ResponseEntity.ofNullable(brnService.saveBrnInfoAsync(request));
     }
 }

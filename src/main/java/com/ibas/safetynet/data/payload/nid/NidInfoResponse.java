@@ -1,4 +1,4 @@
-package com.ibas.safetynet.data.payload.Nid;
+package com.ibas.safetynet.data.payload.nid;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

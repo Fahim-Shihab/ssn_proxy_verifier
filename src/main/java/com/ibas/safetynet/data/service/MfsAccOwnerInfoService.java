@@ -2,15 +2,20 @@ package com.ibas.safetynet.data.service;
 
 import com.ibas.safetynet.common.GenericResponse;
 import com.ibas.safetynet.common.MFS;
+import com.ibas.safetynet.common.Utility;
 import com.ibas.safetynet.data.model.MfsAccOwnerInfo;
-import com.ibas.safetynet.data.payload.MfsAccOwnerInfoDto;
-import com.ibas.safetynet.data.payload.MfsOwnerInfoResponse;
+import com.ibas.safetynet.data.payload.mfs.MfsAccOwnerInfoDto;
+import com.ibas.safetynet.data.payload.mfs.MfsAccOwnerInfoSaveDto;
+import com.ibas.safetynet.data.payload.mfs.MfsOwnerInfoResponse;
 import com.ibas.safetynet.data.repository.MfsAccOwnerInfoRepository;
 import com.ibas.safetynet.kafka.KafkaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 
 @Slf4j
@@ -46,9 +51,13 @@ public class MfsAccOwnerInfoService {
         }
     }
 
-    public GenericResponse saveMfsInfo(MfsAccOwnerInfoDto dto) {
+    public GenericResponse saveMfsInfoAsync(MfsAccOwnerInfoDto dto) {
         try {
-            kafkaService.publishMfsMessage(dto);
+            MfsAccOwnerInfoSaveDto saveDto = new MfsAccOwnerInfoSaveDto();
+            BeanUtils.copyProperties(dto, saveDto);
+            saveDto.setReceivedAt(LocalDateTime.now());
+            saveDto.setSentBy(Utility.getAuthenticatedUserId());
+            kafkaService.publishMfsMessage(saveDto);
             return new GenericResponse(HttpStatus.OK.value(), "Success");
         } catch (Exception e) {
             log.error("Error saving BRN info\n{}", e.getMessage());

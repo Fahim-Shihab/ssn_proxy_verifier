@@ -3,17 +3,20 @@ package com.ibas.safetynet.data.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ibas.safetynet.common.GenericResponse;
+import com.ibas.safetynet.common.Utility;
 import com.ibas.safetynet.data.model.NidInfo;
-import com.ibas.safetynet.data.payload.Nid.*;
+import com.ibas.safetynet.data.payload.nid.*;
 import com.ibas.safetynet.data.repository.NidInfoRepository;
 import com.ibas.safetynet.kafka.KafkaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -49,7 +52,7 @@ public class NidService {
 
                 if (nidInfo.getPermanentAddress() != null) {
                     try {
-                        AddressDto addressDto = gson.fromJson(nidInfo.getPermanentAddress(), AddressDto.class);
+                        AddressDto addressDto = nidInfo.getPermanentAddress();
                         nidInfoDto.setPermanentAddress(addressDto);
                     } catch (Exception e) {
                         log.error("Error trying to convert permanentAddress to dto\n{}",e.getMessage());
@@ -59,7 +62,7 @@ public class NidService {
 
                 if (nidInfo.getPresentAddress() != null) {
                     try {
-                        AddressDto addressDto = gson.fromJson(nidInfo.getPresentAddress(), AddressDto.class);
+                        AddressDto addressDto = nidInfo.getPresentAddress();
                         nidInfoDto.setPresentAddress(addressDto);
                     } catch (Exception e) {
                         log.error("Error trying to convert presentAddress to dto\n{}",e.getMessage());
@@ -83,8 +86,10 @@ public class NidService {
         }
     }
 
-    public GenericResponse saveNidInfoAsync(NidInfoDto dto) {
+    public GenericResponse saveNidInfoAsync(NidInfoSaveDto dto) {
         try {
+            dto.setReceivedAt(LocalDateTime.now());
+            dto.setSentBy(Utility.getAuthenticatedUserId());
             kafkaService.publishNidMessage(dto);
             return new GenericResponse(HttpStatus.OK.value(), "Success");
         } catch (Exception e) {

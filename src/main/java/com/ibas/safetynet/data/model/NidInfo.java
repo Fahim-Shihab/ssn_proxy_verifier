@@ -1,13 +1,15 @@
 package com.ibas.safetynet.data.model;
 
+import com.ibas.safetynet.data.payload.nid.AddressDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import java.sql.Types;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -58,11 +60,20 @@ public class NidInfo {
     @Column(length = 32)
     private String religion;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "permanent_address", columnDefinition = "jsonb")
-    @JdbcTypeCode(Types.VARCHAR)
-    private String permanentAddress;
+    private AddressDto permanentAddress;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "present_address", columnDefinition = "jsonb")
-    @JdbcTypeCode(Types.VARCHAR)
-    private String presentAddress;
+    private AddressDto presentAddress;
+
+    @Column(name = "saved_at")
+    private LocalDateTime savedAt;
+
+    @Column(name = "received_at")
+    private LocalDateTime receivedAt;
+
+    @Column(name = "sent_by")
+    private Integer sentBy;
 }

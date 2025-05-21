@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -61,4 +62,13 @@ public class BrnInfo {
 
     @Column(name = "place_of_birth_en")
     private String placeOfBirthEn;
+
+    @Column(name = "saved_at")
+    private LocalDateTime savedAt;
+
+    @Column(name = "received_at")
+    private LocalDateTime receivedAt;
+
+    @Column(name = "sent_by")
+    private Integer sentBy;
 }

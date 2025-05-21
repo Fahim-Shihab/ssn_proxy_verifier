@@ -1,18 +1,27 @@
-package com.ibas.safetynet.data.payload.Nid;
+package com.ibas.safetynet.data.payload.nid;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class NidInfoDto {
+public class NidInfoSaveDto implements Serializable {
+    @NotNull
     @Size(min = 10, max = 17)
     private String nationalId;
+    @NotNull
     @Size(min = 10, max = 17)
     private String pin;
+    @NotNull
+    private LocalDate dob;
     @Size(max = 255)
     private String name;
     @Size(max = 255)
@@ -34,4 +43,6 @@ public class NidInfoDto {
     private String nidMother;
     private AddressDto permanentAddress;
     private AddressDto presentAddress;
+    private Integer sentBy;
+    private LocalDateTime receivedAt;
 }

@@ -1,4 +1,4 @@
-package com.ibas.safetynet.data.payload;
+package com.ibas.safetynet.data.payload.mfs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

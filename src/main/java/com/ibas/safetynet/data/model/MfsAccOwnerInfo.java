@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,4 +29,13 @@ public class MfsAccOwnerInfo {
 
     @Column(name = "mobile_number_owned_by_nid")
     private boolean mobileNumberOwnedByNid;
+
+    @Column(name = "saved_at")
+    private LocalDateTime savedAt;
+
+    @Column(name = "received_at")
+    private LocalDateTime receivedAt;
+
+    @Column(name = "sent_by")
+    private Integer sentBy;
 }
